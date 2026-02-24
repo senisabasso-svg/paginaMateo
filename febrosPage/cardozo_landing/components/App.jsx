@@ -106,50 +106,51 @@ const App = () => {
       position: 'relative',
       overflowX: 'hidden'
     }}>
-      {/* Video Background */}
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
-        crossOrigin="anonymous"
-        style={{
-          position: 'fixed',
+      {/* Efectos de fondo naranja */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: -2,
+        pointerEvents: 'none',
+        background: 'linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffffff 100%)',
+        overflow: 'hidden'
+      }}>
+        {/* Círculos decorativos naranjas */}
+        <div style={{
+          position: 'absolute',
+          top: '-10%',
+          right: '-5%',
+          width: '500px',
+          height: '500px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.15) 0%, transparent 70%)',
+          animation: 'float 8s ease-in-out infinite'
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: '-15%',
+          left: '-5%',
+          width: '600px',
+          height: '600px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.12) 0%, transparent 70%)',
+          animation: 'float 10s ease-in-out infinite reverse'
+        }} />
+        <div style={{
+          position: 'absolute',
           top: '50%',
           left: '50%',
-          minWidth: '100%',
-          minHeight: '100%',
-          width: 'auto',
-          height: 'auto',
           transform: 'translate(-50%, -50%)',
-          objectFit: 'cover',
-          zIndex: -2,
-          pointerEvents: 'none',
-          backgroundColor: '#000'
-        }}
-        onCanPlay={() => {
-          if (videoRef.current) {
-            videoRef.current.play().catch(err => {
-              console.log('Error al reproducir video en onCanPlay:', err);
-            });
-          }
-        }}
-        onLoadedData={() => {
-          if (videoRef.current) {
-            videoRef.current.play().catch(err => {
-              console.log('Error al reproducir video en onLoadedData:', err);
-            });
-          }
-        }}
-        onError={(e) => {
-          console.error('Error cargando video:', e);
-        }}
-      >
-        <source src="https://assets.grok.com/users/caa71fe1-bfc8-4385-86ad-f038d27aaa6d/generated/059aa451-b773-4115-86cb-4236715e88ea/generated_video.mp4?cache=1" type="video/mp4" />
-        Tu navegador no soporta videos HTML5.
-      </video>
+          width: '400px',
+          height: '400px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.08) 0%, transparent 70%)',
+          animation: 'float 12s ease-in-out infinite'
+        }} />
+      </div>
       {/* Splash Screen con Logo Animado */}
       {showSplash && (
         <div style={{
@@ -231,8 +232,8 @@ const App = () => {
                         width: '6px',
                         height: '6px',
                         borderRadius: '50%',
-                        backgroundColor: i % 3 === 0 ? 'rgba(99, 102, 241, 0.8)' : i % 3 === 1 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(139, 92, 246, 0.8)',
-                        boxShadow: `0 0 15px ${i % 3 === 0 ? 'rgba(99, 102, 241, 1)' : i % 3 === 1 ? 'rgba(34, 197, 94, 1)' : 'rgba(139, 92, 246, 1)'}`,
+                        backgroundColor: i % 3 === 0 ? 'rgba(255, 152, 0, 0.8)' : i % 3 === 1 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(255, 152, 0, 0.8)',
+                        boxShadow: `0 0 15px ${i % 3 === 0 ? 'rgba(255, 152, 0, 1)' : i % 3 === 1 ? 'rgba(34, 197, 94, 1)' : 'rgba(255, 152, 0, 1)'}`,
                         transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
                         animation: `magicExplode 1.5s ease-out forwards`,
                         opacity: 0
@@ -341,7 +342,7 @@ const App = () => {
           const x = Math.cos((finalAngle * Math.PI) / 180) * distance;
           const y = Math.sin((finalAngle * Math.PI) / 180) * distance;
           const delay = 2.6 + i * 0.06;
-          const colors = ['rgba(99, 102, 241, 0.5)', 'rgba(34, 197, 94, 0.5)', 'rgba(139, 92, 246, 0.5)'];
+          const colors = ['rgba(255, 152, 0, 0.5)', 'rgba(34, 197, 94, 0.5)', 'rgba(255, 152, 0, 0.5)'];
           const color = colors[i % 3];
           
           return (
@@ -399,30 +400,19 @@ const App = () => {
         })}
       </div>
 
-      {/* Overlay muy sutil para mejorar legibilidad - el video se ve claramente */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        zIndex: -1,
-        pointerEvents: 'none'
-      }} />
-      {/* Cursor effect background */}
+      {/* Cursor effect background naranja */}
       <div style={{
         position: 'fixed',
         width: '500px',
         height: '500px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(255, 152, 0, 0.12) 0%, transparent 70%)',
         left: mousePosition.x - 250,
         top: mousePosition.y - 250,
         pointerEvents: 'none',
         zIndex: 2,
         transition: 'opacity 0.3s ease',
-        opacity: scrolled ? 0.3 : 0.5
+        opacity: scrolled ? 0.2 : 0.4
       }} />
 
       {/* Header */}
@@ -455,7 +445,7 @@ const App = () => {
                 padding: '0.5rem 0'
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = '#6366f1';
+                e.target.style.color = '#ff9800';
               }}
               onMouseLeave={(e) => {
                 e.target.style.color = '#333';
@@ -468,7 +458,7 @@ const App = () => {
                 left: 0,
                 width: 0,
                 height: '2px',
-                backgroundColor: '#6366f1',
+                backgroundColor: '#ff9800',
                 transition: 'width 0.3s ease'
               }}
               onMouseEnter={(e) => {
@@ -479,7 +469,7 @@ const App = () => {
           ))}
           <button 
             style={{
-                backgroundColor: '#6366f1',
+                backgroundColor: '#ff9800',
               color: 'white',
               border: 'none',
               padding: '0.75rem 1.5rem',
@@ -488,17 +478,17 @@ const App = () => {
               fontWeight: '600',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
-              boxShadow: '0 4px 6px rgba(99, 102, 241, 0.3)',
+              boxShadow: '0 4px 6px rgba(255, 152, 0, 0.3)',
               position: 'relative',
               overflow: 'hidden'
             }}
             onMouseEnter={(e) => {
               e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 6px 12px rgba(99, 102, 241, 0.4)';
+              e.target.style.boxShadow = '0 6px 12px rgba(255, 152, 0, 0.4)';
             }}
             onMouseLeave={(e) => {
               e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 4px 6px rgba(99, 102, 241, 0.3)';
+              e.target.style.boxShadow = '0 4px 6px rgba(255, 152, 0, 0.3)';
             }}
           >
             Agendá una reunión
@@ -532,7 +522,7 @@ const App = () => {
           width: '600px',
           height: '600px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.15) 0%, transparent 70%)',
           animation: 'float 6s ease-in-out infinite',
           zIndex: 2
         }} />
@@ -543,7 +533,7 @@ const App = () => {
           width: '400px',
           height: '400px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.12) 0%, transparent 70%)',
           animation: 'float 8s ease-in-out infinite reverse',
           zIndex: 2
         }} />
@@ -560,17 +550,17 @@ const App = () => {
           }}>
             Consigue:{' '}
             <span style={{ 
-              color: '#6366f1',
+              color: '#ff9800',
               display: 'inline-block',
               animation: 'pulse 2s ease-in-out infinite'
             }}>Más ventas</span>{' '}
             <span style={{ 
-              color: '#6366f1',
+              color: '#ff9800',
               display: 'inline-block',
               animation: 'pulse 2s ease-in-out infinite 0.3s'
             }}>Más leads</span>{' '}
             <span style={{ 
-              color: '#6366f1',
+              color: '#ff9800',
               display: 'inline-block',
               animation: 'pulse 2s ease-in-out infinite 0.6s'
             }}>Más tráfico</span>
@@ -579,7 +569,7 @@ const App = () => {
         <FadeInSection delay={0.2}>
           <button 
             style={{
-                backgroundColor: '#6366f1',
+                backgroundColor: '#ff9800',
               color: 'white',
               border: 'none',
               padding: '1.2rem 3rem',
@@ -591,16 +581,16 @@ const App = () => {
               position: 'relative',
               zIndex: 3,
               transition: 'all 0.3s ease',
-              boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)',
+              boxShadow: '0 8px 20px rgba(255, 152, 0, 0.3)',
               overflow: 'hidden'
             }}
             onMouseEnter={(e) => {
               e.target.style.transform = 'translateY(-3px) scale(1.05)';
-              e.target.style.boxShadow = '0 12px 30px rgba(99, 102, 241, 0.4)';
+              e.target.style.boxShadow = '0 12px 30px rgba(255, 152, 0, 0.4)';
             }}
             onMouseLeave={(e) => {
               e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 8px 20px rgba(99, 102, 241, 0.3)';
+              e.target.style.boxShadow = '0 8px 20px rgba(255, 152, 0, 0.3)';
             }}
           >
             Ver Servicios
@@ -611,7 +601,7 @@ const App = () => {
       {/* Quiénes Somos Section */}
       <section id="quienes-somos" style={{
         padding: '6rem 4rem',
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         position: 'relative',
         zIndex: 1,
         backdropFilter: 'blur(2px)'
@@ -625,7 +615,7 @@ const App = () => {
               marginBottom: '3rem',
               textAlign: 'center'
             }}>
-              <span style={{ color: '#6366f1' }}>Quiénes Somos</span>
+              <span style={{ color: '#ff9800' }}>Quiénes Somos</span>
             </h2>
           </FadeInSection>
           <FadeInSection delay={0.1}>
@@ -651,7 +641,7 @@ const App = () => {
                 fontWeight: '700',
                 color: '#1a1a1a',
                 marginBottom: '1.5rem',
-                borderBottom: '2px solid #6366f1',
+                borderBottom: '2px solid #ff9800',
                 paddingBottom: '0.5rem'
               }}>
                 2. Objetivo del Servicio
@@ -684,7 +674,7 @@ const App = () => {
       {/* Services Section */}
       <section id="servicios" style={{
         padding: '6rem 4rem',
-        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.5) 100%)',
+        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%)',
         position: 'relative',
         zIndex: 1,
         backdropFilter: 'blur(2px)'
@@ -697,7 +687,7 @@ const App = () => {
             marginBottom: '4rem',
             textAlign: 'center'
           }}>
-            Servicios <span style={{ color: '#6366f1' }}>Más Solicitados</span>
+            Servicios <span style={{ color: '#ff9800' }}>Más Solicitados</span>
           </h2>
         </FadeInSection>
         <div style={{
@@ -766,13 +756,13 @@ const App = () => {
                   boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   cursor: 'pointer',
-                  border: '1px solid rgba(99, 102, 241, 0.1)',
+                  border: '1px solid rgba(255, 152, 0, 0.1)',
                   position: 'relative',
                   overflow: 'hidden'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 16px 40px rgba(99, 102, 241, 0.2)';
+                  e.currentTarget.style.boxShadow = '0 16px 40px rgba(255, 152, 0, 0.2)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0) scale(1)';
@@ -785,7 +775,7 @@ const App = () => {
                   left: 0,
                   width: '100%',
                   height: '4px',
-                  background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+                  background: 'linear-gradient(90deg, #ff9800, #ff6f00)',
                   transform: 'scaleX(0)',
                   transition: 'transform 0.4s ease',
                 }}
@@ -813,7 +803,7 @@ const App = () => {
                 <a 
                   href="#contacto" 
                   style={{
-                    color: '#6366f1',
+                    color: '#ff9800',
                     textDecoration: 'none',
                     fontWeight: '600',
                     fontSize: '1rem',
@@ -840,7 +830,7 @@ const App = () => {
             <a 
               href="#servicios" 
               style={{
-                color: '#6366f1',
+                color: '#ff9800',
                 textDecoration: 'none',
                 fontWeight: '600',
                 fontSize: '1.1rem',
@@ -865,7 +855,7 @@ const App = () => {
       {/* Clients Section */}
       <section id="trabajos" style={{
         padding: '6rem 4rem',
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         textAlign: 'center',
         position: 'relative',
         zIndex: 1,
@@ -878,7 +868,7 @@ const App = () => {
             color: '#1a1a1a',
             marginBottom: '4rem'
           }}>
-            Algunas empresas <span style={{ color: '#6366f1' }}>en las que trabajamos</span>
+            Algunas empresas <span style={{ color: '#ff9800' }}>en las que trabajamos</span>
           </h2>
         </FadeInSection>
         <div style={{
@@ -909,8 +899,8 @@ const App = () => {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.1)';
-                  e.currentTarget.style.borderColor = '#6366f1';
-                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(99, 102, 241, 0.2)';
+                  e.currentTarget.style.borderColor = '#ff9800';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 152, 0, 0.2)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'scale(1)';
@@ -928,7 +918,7 @@ const App = () => {
       {/* Feedback Section */}
       <section style={{
         padding: '6rem 4rem',
-        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.5) 100%)',
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%)',
         textAlign: 'center',
         position: 'relative',
         zIndex: 1,
@@ -941,7 +931,7 @@ const App = () => {
             color: '#1a1a1a',
             marginBottom: '4rem'
           }}>
-            <span style={{ color: '#6366f1' }}>Nos encanta</span> recibir Feedback de nuestros clientes!
+            <span style={{ color: '#ff9800' }}>Nos encanta</span> recibir Feedback de nuestros clientes!
           </h2>
         </FadeInSection>
         <div style={{
@@ -967,7 +957,7 @@ const App = () => {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-5px)';
-                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(99, 102, 241, 0.15)';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(255, 152, 0, 0.15)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
@@ -985,7 +975,7 @@ const App = () => {
                 </p>
                 <p style={{
                   fontSize: '0.95rem',
-                  color: '#6366f1',
+                  color: '#ff9800',
                   fontWeight: '600'
                 }}>
                   - Cliente Satisfecho
@@ -1048,7 +1038,7 @@ const App = () => {
                 transition: 'color 0.3s ease',
                 cursor: 'pointer'
               }}
-              onMouseEnter={(e) => e.target.style.color = '#6366f1'}
+              onMouseEnter={(e) => e.target.style.color = '#ff9800'}
               onMouseLeave={(e) => e.target.style.color = '#ccc'}
               >
                 cardozodigitalstudio@gmail.com
@@ -1169,6 +1159,73 @@ const App = () => {
         >
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
         </svg>
+      </a>
+
+      {/* Video Floating Button - Donación febros.uy */}
+      <a
+        href="https://www.instagram.com/febros.uy/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: 'fixed',
+          bottom: '2rem',
+          left: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          zIndex: 1000,
+          textDecoration: 'none',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
+      >
+        <div
+          style={{
+            width: '64px',
+            height: '64px',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            animation: 'pulse 2s ease-in-out infinite'
+          }}
+        >
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              pointerEvents: 'none'
+            }}
+          >
+            <source src="/generated_video.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <span
+          style={{
+            marginTop: '0.5rem',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            color: '#1a1a1a',
+            textAlign: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '0.25rem 0.5rem',
+            borderRadius: '4px',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          Donacion de febros.uy
+        </span>
       </a>
 
       <style>{`
