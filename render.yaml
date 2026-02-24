@@ -2,7 +2,7 @@ services:
   - type: web
     name: cardozo-digital-studio
     env: static
-    buildCommand: cd febrosPage/cardozo_landing && npm install && npx vite build
+    buildCommand: cd febrosPage/cardozo_landing && npm install && npm run build
     staticPublishPath: febrosPage/cardozo_landing/dist
     headers:
       - path: /*
