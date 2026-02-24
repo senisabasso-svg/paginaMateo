@@ -1192,23 +1192,23 @@ const App = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            animation: 'pulse 2s ease-in-out infinite'
+            backgroundColor: '#ffffff',
+            borderRadius: '8px',
+            padding: '4px',
+            animation: 'pulse 2s ease-in-out infinite',
+            overflow: 'hidden'
           }}
         >
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
+          <img
+            src="/febros-logo.png"
+            alt="Febros Logo"
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'contain',
               pointerEvents: 'none'
             }}
-          >
-            <source src="/generated_video.mp4" type="video/mp4" />
-          </video>
+          />
         </div>
         <span
           style={{
