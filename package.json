@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "cd febrosPage/cardozo_landing && npm install && npm run build",
-    "dev": "cd febrosPage/cardozo_landing && npm run dev"
+    "dev": "cd febrosPage/cardozo_landing && npm run dev",
+    "render-build": "cd febrosPage/cardozo_landing && npm install && npm run build"
   }
 }
