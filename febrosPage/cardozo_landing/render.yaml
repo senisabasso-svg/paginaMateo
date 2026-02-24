@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cardozo-digital-studio
+    env: static
+    rootDir: febrosPage/cardozo_landing
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+    headers:
+      - path: /*
+        name: X-Robots-Tag
+        value: noindex
