@@ -106,7 +106,7 @@ const App = () => {
       position: 'relative',
       overflowX: 'hidden'
     }}>
-      {/* Efectos de fondo naranja */}
+      {/* Efectos de fondo naranja mejorados - estilo video */}
       <div style={{
         position: 'fixed',
         top: 0,
@@ -115,40 +115,148 @@ const App = () => {
         height: '100%',
         zIndex: -2,
         pointerEvents: 'none',
-        background: 'linear-gradient(135deg, #ffffff 0%, #fff5f0 50%, #ffffff 100%)',
+        background: 'linear-gradient(135deg, #ffffff 0%, #fff5f0 30%, #ffffff 60%, #fff5f0 100%)',
+        backgroundSize: '200% 200%',
+        animation: 'gradientShift 15s ease infinite',
         overflow: 'hidden'
       }}>
-        {/* Círculos decorativos naranjas */}
+        {/* Círculos decorativos naranjas grandes - capa 1 */}
         <div style={{
           position: 'absolute',
           top: '-10%',
           right: '-5%',
-          width: '500px',
-          height: '500px',
+          width: '600px',
+          height: '600px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.15) 0%, transparent 70%)',
-          animation: 'float 8s ease-in-out infinite'
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.18) 0%, rgba(255, 152, 0, 0.08) 40%, transparent 70%)',
+          animation: 'floatLarge 12s ease-in-out infinite',
+          filter: 'blur(40px)'
         }} />
         <div style={{
           position: 'absolute',
           bottom: '-15%',
           left: '-5%',
-          width: '600px',
-          height: '600px',
+          width: '700px',
+          height: '700px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.12) 0%, transparent 70%)',
-          animation: 'float 10s ease-in-out infinite reverse'
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.06) 40%, transparent 70%)',
+          animation: 'floatLarge 14s ease-in-out infinite reverse',
+          filter: 'blur(50px)'
         }} />
         <div style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '400px',
-          height: '400px',
+          width: '500px',
+          height: '500px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.08) 0%, transparent 70%)',
-          animation: 'float 12s ease-in-out infinite'
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.12) 0%, rgba(255, 152, 0, 0.04) 40%, transparent 70%)',
+          animation: 'floatLarge 16s ease-in-out infinite',
+          filter: 'blur(60px)'
+        }} />
+
+        {/* Partículas flotantes pequeñas - capa 2 */}
+        {[...Array(40)].map((_, i) => {
+          const size = 3 + Math.random() * 5;
+          const startX = Math.random() * 100;
+          const startY = Math.random() * 100;
+          const duration = 8 + Math.random() * 12;
+          const delay = Math.random() * 5;
+          
+          return (
+            <div
+              key={`particle-bg-${i}`}
+              style={{
+                position: 'absolute',
+                left: `${startX}%`,
+                top: `${startY}%`,
+                width: `${size}px`,
+                height: `${size}px`,
+                borderRadius: '50%',
+                background: `rgba(255, 152, 0, ${0.3 + Math.random() * 0.4})`,
+                boxShadow: `0 0 ${size * 2}px rgba(255, 152, 0, 0.6)`,
+                animation: `particleFloat ${duration}s ease-in-out infinite ${delay}s`,
+                filter: 'blur(1px)'
+              }}
+            />
+          );
+        })}
+
+        {/* Formas geométricas flotantes - capa 3 */}
+        {[...Array(12)].map((_, i) => {
+          const size = 20 + Math.random() * 40;
+          const startX = Math.random() * 100;
+          const startY = Math.random() * 100;
+          const duration = 10 + Math.random() * 15;
+          const delay = Math.random() * 8;
+          const rotation = Math.random() * 360;
+          const isCircle = Math.random() > 0.5;
+          
+          return (
+            <div
+              key={`shape-${i}`}
+              style={{
+                position: 'absolute',
+                left: `${startX}%`,
+                top: `${startY}%`,
+                width: `${size}px`,
+                height: `${size}px`,
+                borderRadius: isCircle ? '50%' : '8px',
+                background: `rgba(255, 152, 0, ${0.05 + Math.random() * 0.1})`,
+                border: `1px solid rgba(255, 152, 0, ${0.2 + Math.random() * 0.3})`,
+                animation: `shapeFloat ${duration}s ease-in-out infinite ${delay}s`,
+                transform: `rotate(${rotation}deg)`,
+                filter: 'blur(2px)'
+              }}
+            />
+          );
+        })}
+
+        {/* Ondas de gradiente animadas - capa 4 */}
+        <div style={{
+          position: 'absolute',
+          top: '20%',
+          left: '0%',
+          width: '100%',
+          height: '200px',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255, 152, 0, 0.1) 50%, transparent 100%)',
+          animation: 'waveMove 20s linear infinite',
+          filter: 'blur(30px)',
+          transform: 'rotate(-5deg)'
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: '30%',
+          right: '0%',
+          width: '100%',
+          height: '150px',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255, 152, 0, 0.08) 50%, transparent 100%)',
+          animation: 'waveMove 25s linear infinite reverse',
+          filter: 'blur(25px)',
+          transform: 'rotate(5deg)'
+        }} />
+
+        {/* Efectos de profundidad con múltiples capas */}
+        <div style={{
+          position: 'absolute',
+          top: '0%',
+          left: '0%',
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(ellipse at 30% 20%, rgba(255, 152, 0, 0.1) 0%, transparent 50%)',
+          animation: 'depthPulse 18s ease-in-out infinite',
+          filter: 'blur(80px)'
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: '0%',
+          right: '0%',
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(ellipse at 70% 80%, rgba(255, 152, 0, 0.08) 0%, transparent 50%)',
+          animation: 'depthPulse 22s ease-in-out infinite reverse',
+          filter: 'blur(90px)'
         }} />
       </div>
       {/* Splash Screen con Logo Animado */}
@@ -1235,6 +1343,96 @@ const App = () => {
           }
           50% {
             transform: translateY(-20px);
+          }
+        }
+
+        @keyframes floatLarge {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.6;
+          }
+          25% {
+            transform: translate(30px, -40px) scale(1.1);
+            opacity: 0.8;
+          }
+          50% {
+            transform: translate(-20px, -60px) scale(0.9);
+            opacity: 0.7;
+          }
+          75% {
+            transform: translate(40px, -30px) scale(1.05);
+            opacity: 0.75;
+          }
+        }
+
+        @keyframes particleFloat {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.4;
+          }
+          25% {
+            transform: translate(20px, -30px) scale(1.2);
+            opacity: 0.7;
+          }
+          50% {
+            transform: translate(-15px, -50px) scale(0.8);
+            opacity: 0.5;
+          }
+          75% {
+            transform: translate(25px, -20px) scale(1.1);
+            opacity: 0.6;
+          }
+        }
+
+        @keyframes shapeFloat {
+          0%, 100% {
+            transform: translate(0, 0) rotate(0deg) scale(1);
+            opacity: 0.3;
+          }
+          33% {
+            transform: translate(40px, -50px) rotate(120deg) scale(1.2);
+            opacity: 0.5;
+          }
+          66% {
+            transform: translate(-30px, -70px) rotate(240deg) scale(0.9);
+            opacity: 0.4;
+          }
+        }
+
+        @keyframes waveMove {
+          0% {
+            transform: translateX(-100%) rotate(-5deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(100%) rotate(-5deg);
+            opacity: 0;
+          }
+        }
+
+        @keyframes gradientShift {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
+        @keyframes depthPulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.3);
+            opacity: 0.8;
           }
         }
         
