@@ -42,6 +42,7 @@ const FadeInSection = ({ children, delay = 0 }) => {
 
 const App = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [showSplash, setShowSplash] = useState(true);
   const [logoExploded, setLogoExploded] = useState(false);
@@ -51,9 +52,55 @@ const App = () => {
   const logoLetters = ['C', 'A', 'R', 'D', 'O', 'Z', 'O'];
   const studioLetters = ['D', 'I', 'G', 'I', 'T', 'A', 'L', ' ', 'S', 'T', 'U', 'D', 'I', 'O'];
 
+  // Calcular color del background según el scroll
+  const getBackgroundColor = () => {
+    // Azul oscuro inicial: rgb(13, 36, 63) o #0D243F
+    // Azul medio: rgb(59, 130, 246) o #3B82F6
+    // Morado: rgb(138, 43, 226) o #8A2BE2
+    
+    if (scrollProgress < 0.5) {
+      // Azul oscuro -> Azul (0% a 50%)
+      const progress = scrollProgress * 2; // 0 a 1
+      const r = Math.round(13 + (59 - 13) * progress);
+      const g = Math.round(36 + (130 - 36) * progress);
+      const b = Math.round(63 + (246 - 63) * progress);
+      return `rgb(${r}, ${g}, ${b})`;
+    } else {
+      // Azul -> Morado (50% a 100%)
+      const progress = (scrollProgress - 0.5) * 2; // 0 a 1
+      const r = Math.round(59 + (138 - 59) * progress);
+      const g = Math.round(130 + (43 - 130) * progress);
+      const b = Math.round(246 + (226 - 246) * progress);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+  };
+
+  // Calcular opacidad de los logos según el scroll
+  const getFacebookOpacity = () => {
+    if (scrollProgress < 0.3) return 0;
+    if (scrollProgress > 0.7) return 0;
+    if (scrollProgress >= 0.3 && scrollProgress <= 0.5) {
+      return (scrollProgress - 0.3) / 0.2; // Fade in
+    }
+    return 1 - (scrollProgress - 0.5) / 0.2; // Fade out
+  };
+
+  const getInstagramOpacity = () => {
+    if (scrollProgress < 0.7) return 0;
+    return Math.min((scrollProgress - 0.7) / 0.3, 1); // Fade in desde 70%
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
+      
+      // Calcular progreso del scroll (0 a 1)
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      const maxScroll = documentHeight - windowHeight;
+      const progress = maxScroll > 0 ? Math.min(scrollTop / maxScroll, 1) : 0;
+      setScrollProgress(progress);
     };
 
     const handleMouseMove = (e) => {
@@ -62,6 +109,9 @@ const App = () => {
 
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('mousemove', handleMouseMove);
+    
+    // Calcular scroll inicial
+    handleScroll();
 
     // Asegurar que el video se reproduzca
     const playVideo = () => {
@@ -96,17 +146,20 @@ const App = () => {
     };
   }, []);
 
+  const bgColor = getBackgroundColor();
+
   return (
     <div style={{ 
       fontFamily: 'system-ui, -apple-system, sans-serif', 
       minHeight: '100vh',
-      backgroundColor: '#ffffff',
+      backgroundColor: bgColor,
       margin: 0,
       padding: 0,
       position: 'relative',
-      overflowX: 'hidden'
+      overflowX: 'hidden',
+      transition: 'background-color 0.3s ease'
     }}>
-      {/* Efectos de fondo naranja mejorados - estilo video */}
+      {/* Efectos de fondo dinámicos que cambian con el scroll */}
       <div style={{
         position: 'fixed',
         top: 0,
@@ -115,12 +168,11 @@ const App = () => {
         height: '100%',
         zIndex: -2,
         pointerEvents: 'none',
-        background: 'linear-gradient(135deg, #ffffff 0%, #fff5f0 30%, #ffffff 60%, #fff5f0 100%)',
-        backgroundSize: '200% 200%',
-        animation: 'gradientShift 15s ease infinite',
-        overflow: 'hidden'
+        background: `linear-gradient(135deg, ${bgColor} 0%, ${bgColor} 100%)`,
+        overflow: 'hidden',
+        transition: 'background 0.3s ease'
       }}>
-        {/* Círculos decorativos naranjas grandes - capa 1 */}
+        {/* Círculos decorativos que cambian de color según scroll - capa 1 */}
         <div style={{
           position: 'absolute',
           top: '-10%',
@@ -128,9 +180,12 @@ const App = () => {
           width: '600px',
           height: '600px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.18) 0%, rgba(255, 152, 0, 0.08) 40%, transparent 70%)',
+          background: scrollProgress < 0.5 
+            ? 'radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, rgba(59, 130, 246, 0.08) 40%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(138, 43, 226, 0.18) 0%, rgba(138, 43, 226, 0.08) 40%, transparent 70%)',
           animation: 'floatLarge 12s ease-in-out infinite',
-          filter: 'blur(40px)'
+          filter: 'blur(40px)',
+          transition: 'background 0.3s ease'
         }} />
         <div style={{
           position: 'absolute',
@@ -139,9 +194,12 @@ const App = () => {
           width: '700px',
           height: '700px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.06) 40%, transparent 70%)',
+          background: scrollProgress < 0.5
+            ? 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.06) 40%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, rgba(138, 43, 226, 0.06) 40%, transparent 70%)',
           animation: 'floatLarge 14s ease-in-out infinite reverse',
-          filter: 'blur(50px)'
+          filter: 'blur(50px)',
+          transition: 'background 0.3s ease'
         }} />
         <div style={{
           position: 'absolute',
@@ -151,9 +209,12 @@ const App = () => {
           width: '500px',
           height: '500px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.12) 0%, rgba(255, 152, 0, 0.04) 40%, transparent 70%)',
+          background: scrollProgress < 0.5
+            ? 'radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.04) 40%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(138, 43, 226, 0.12) 0%, rgba(138, 43, 226, 0.04) 40%, transparent 70%)',
           animation: 'floatLarge 16s ease-in-out infinite',
-          filter: 'blur(60px)'
+          filter: 'blur(60px)',
+          transition: 'background 0.3s ease'
         }} />
 
         {/* Partículas flotantes pequeñas - capa 2 */}
@@ -174,8 +235,12 @@ const App = () => {
                 width: `${size}px`,
                 height: `${size}px`,
                 borderRadius: '50%',
-                background: `rgba(255, 152, 0, ${0.3 + Math.random() * 0.4})`,
-                boxShadow: `0 0 ${size * 2}px rgba(255, 152, 0, 0.6)`,
+                background: scrollProgress < 0.5
+                  ? `rgba(59, 130, 246, ${0.3 + Math.random() * 0.4})`
+                  : `rgba(138, 43, 226, ${0.3 + Math.random() * 0.4})`,
+                boxShadow: scrollProgress < 0.5
+                  ? `0 0 ${size * 2}px rgba(59, 130, 246, 0.6)`
+                  : `0 0 ${size * 2}px rgba(138, 43, 226, 0.6)`,
                 animation: `particleFloat ${duration}s ease-in-out infinite ${delay}s`,
                 filter: 'blur(1px)'
               }}
@@ -203,8 +268,12 @@ const App = () => {
                 width: `${size}px`,
                 height: `${size}px`,
                 borderRadius: isCircle ? '50%' : '8px',
-                background: `rgba(255, 152, 0, ${0.05 + Math.random() * 0.1})`,
-                border: `1px solid rgba(255, 152, 0, ${0.2 + Math.random() * 0.3})`,
+                background: scrollProgress < 0.5
+                  ? `rgba(59, 130, 246, ${0.05 + Math.random() * 0.1})`
+                  : `rgba(138, 43, 226, ${0.05 + Math.random() * 0.1})`,
+                border: scrollProgress < 0.5
+                  ? `1px solid rgba(59, 130, 246, ${0.2 + Math.random() * 0.3})`
+                  : `1px solid rgba(138, 43, 226, ${0.2 + Math.random() * 0.3})`,
                 animation: `shapeFloat ${duration}s ease-in-out infinite ${delay}s`,
                 transform: `rotate(${rotation}deg)`,
                 filter: 'blur(2px)'
@@ -220,7 +289,9 @@ const App = () => {
           left: '0%',
           width: '100%',
           height: '200px',
-          background: 'linear-gradient(90deg, transparent 0%, rgba(255, 152, 0, 0.1) 50%, transparent 100%)',
+          background: scrollProgress < 0.5
+            ? 'linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.1) 50%, transparent 100%)'
+            : 'linear-gradient(90deg, transparent 0%, rgba(138, 43, 226, 0.1) 50%, transparent 100%)',
           animation: 'waveMove 20s linear infinite',
           filter: 'blur(30px)',
           transform: 'rotate(-5deg)'
@@ -231,7 +302,9 @@ const App = () => {
           right: '0%',
           width: '100%',
           height: '150px',
-          background: 'linear-gradient(90deg, transparent 0%, rgba(255, 152, 0, 0.08) 50%, transparent 100%)',
+          background: scrollProgress < 0.5
+            ? 'linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.08) 50%, transparent 100%)'
+            : 'linear-gradient(90deg, transparent 0%, rgba(138, 43, 226, 0.08) 50%, transparent 100%)',
           animation: 'waveMove 25s linear infinite reverse',
           filter: 'blur(25px)',
           transform: 'rotate(5deg)'
@@ -244,7 +317,9 @@ const App = () => {
           left: '0%',
           width: '100%',
           height: '100%',
-          background: 'radial-gradient(ellipse at 30% 20%, rgba(255, 152, 0, 0.1) 0%, transparent 50%)',
+          background: scrollProgress < 0.5
+            ? 'radial-gradient(ellipse at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)'
+            : 'radial-gradient(ellipse at 30% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%)',
           animation: 'depthPulse 18s ease-in-out infinite',
           filter: 'blur(80px)'
         }} />
@@ -254,7 +329,9 @@ const App = () => {
           right: '0%',
           width: '100%',
           height: '100%',
-          background: 'radial-gradient(ellipse at 70% 80%, rgba(255, 152, 0, 0.08) 0%, transparent 50%)',
+          background: scrollProgress < 0.5
+            ? 'radial-gradient(ellipse at 70% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%)'
+            : 'radial-gradient(ellipse at 70% 80%, rgba(138, 43, 226, 0.08) 0%, transparent 50%)',
           animation: 'depthPulse 22s ease-in-out infinite reverse',
           filter: 'blur(90px)'
         }} />
@@ -285,7 +362,7 @@ const App = () => {
             <div style={{
               fontSize: 'clamp(4rem, 12vw, 8rem)',
               fontWeight: '900',
-              color: '#1a1a1a',
+              color: '#ffffff',
               letterSpacing: '0.1em',
               marginBottom: '0.5rem',
               textShadow: '0 4px 20px rgba(0, 0, 0, 0.1), 0 2px 10px rgba(0, 0, 0, 0.05)',
@@ -508,18 +585,20 @@ const App = () => {
         })}
       </div>
 
-      {/* Cursor effect background naranja */}
+      {/* Cursor effect background que cambia según scroll */}
       <div style={{
         position: 'fixed',
         width: '500px',
         height: '500px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(255, 152, 0, 0.12) 0%, transparent 70%)',
+        background: scrollProgress < 0.5
+          ? 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)'
+          : 'radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%)',
         left: mousePosition.x - 250,
         top: mousePosition.y - 250,
         pointerEvents: 'none',
         zIndex: 2,
-        transition: 'opacity 0.3s ease',
+        transition: 'opacity 0.3s ease, background 0.3s ease',
         opacity: scrolled ? 0.2 : 0.4
       }} />
 
@@ -529,13 +608,13 @@ const App = () => {
         justifyContent: 'center',
         alignItems: 'center',
         padding: '1.5rem 4rem',
-        backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.7)',
-        backdropFilter: scrolled ? 'blur(8px)' : 'blur(5px)',
-        borderBottom: scrolled ? '1px solid rgba(229, 229, 229, 0.8)' : '1px solid rgba(229, 229, 229, 0.5)',
+        backgroundColor: scrolled ? `rgba(255, 255, 255, 0.9)` : `rgba(255, 255, 255, 0.8)`,
+        backdropFilter: scrolled ? 'blur(10px)' : 'blur(8px)',
+        borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid rgba(255, 255, 255, 0.2)',
         position: 'sticky',
         top: 0,
         zIndex: 1000,
-        boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.1)' : '0 2px 4px rgba(0,0,0,0.05)',
+        boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.2)' : '0 2px 4px rgba(0,0,0,0.1)',
         transition: 'all 0.3s ease'
       }}>
         <nav style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
@@ -544,19 +623,20 @@ const App = () => {
               key={index}
               href={`#${item.toLowerCase().replace(' ', '-')}`}
               style={{ 
-                color: '#333', 
+                color: '#ffffff', 
                 textDecoration: 'none', 
                 fontSize: '0.95rem', 
                 fontWeight: '500',
                 position: 'relative',
                 transition: 'color 0.3s ease',
-                padding: '0.5rem 0'
+                padding: '0.5rem 0',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = '#ff9800';
+                e.target.style.color = '#ffd700';
               }}
               onMouseLeave={(e) => {
-                e.target.style.color = '#333';
+                e.target.style.color = '#ffffff';
               }}
             >
               {item}
@@ -566,7 +646,7 @@ const App = () => {
                 left: 0,
                 width: 0,
                 height: '2px',
-                backgroundColor: '#ff9800',
+                backgroundColor: scrollProgress < 0.5 ? '#3B82F6' : '#8A2BE2',
                 transition: 'width 0.3s ease'
               }}
               onMouseEnter={(e) => {
@@ -577,7 +657,7 @@ const App = () => {
           ))}
           <button 
             style={{
-                backgroundColor: '#ff9800',
+                backgroundColor: scrollProgress < 0.5 ? '#3B82F6' : '#8A2BE2',
               color: 'white',
               border: 'none',
               padding: '0.75rem 1.5rem',
@@ -612,14 +692,14 @@ const App = () => {
         overflow: 'hidden',
         zIndex: 1
       }}>
-        {/* Overlay muy sutil para hero - la imagen se ve claramente */}
+        {/* Overlay sutil para hero */}
         <div style={{
           position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.4) 100%)',
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.1) 100%)',
           zIndex: 1
         }} />
         {/* Animated background elements */}
@@ -650,7 +730,7 @@ const App = () => {
           <h1 style={{
             fontSize: 'clamp(2.5rem, 5vw, 4rem)',
             fontWeight: '800',
-            color: '#1a1a1a',
+            color: '#ffffff',
             marginBottom: '2rem',
             lineHeight: '1.2',
             position: 'relative',
@@ -658,17 +738,17 @@ const App = () => {
           }}>
             Consigue:{' '}
             <span style={{ 
-              color: '#ff9800',
+              color: scrollProgress < 0.5 ? '#60A5FA' : '#A78BFA',
               display: 'inline-block',
               animation: 'pulse 2s ease-in-out infinite'
             }}>Más ventas</span>{' '}
             <span style={{ 
-              color: '#ff9800',
+              color: scrollProgress < 0.5 ? '#60A5FA' : '#A78BFA',
               display: 'inline-block',
               animation: 'pulse 2s ease-in-out infinite 0.3s'
             }}>Más leads</span>{' '}
             <span style={{ 
-              color: '#ff9800',
+              color: scrollProgress < 0.5 ? '#60A5FA' : '#A78BFA',
               display: 'inline-block',
               animation: 'pulse 2s ease-in-out infinite 0.6s'
             }}>Más tráfico</span>
@@ -677,7 +757,7 @@ const App = () => {
         <FadeInSection delay={0.2}>
           <button 
             style={{
-                backgroundColor: '#ff9800',
+                backgroundColor: scrollProgress < 0.5 ? '#3B82F6' : '#8A2BE2',
               color: 'white',
               border: 'none',
               padding: '1.2rem 3rem',
@@ -709,7 +789,7 @@ const App = () => {
       {/* Quiénes Somos Section */}
       <section id="quienes-somos" style={{
         padding: '6rem 4rem',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
         position: 'relative',
         zIndex: 1,
         backdropFilter: 'blur(2px)'
@@ -719,7 +799,7 @@ const App = () => {
             <h2 style={{
               fontSize: 'clamp(2rem, 4vw, 2.8rem)',
               fontWeight: '700',
-              color: '#1a1a1a',
+              color: '#ffffff',
               marginBottom: '3rem',
               textAlign: 'center'
             }}>
@@ -729,7 +809,7 @@ const App = () => {
           <FadeInSection delay={0.1}>
             <p style={{
               fontSize: '1.2rem',
-              color: '#555',
+              color: '#e0e0e0',
               lineHeight: '1.8',
               marginBottom: '2rem',
               textAlign: 'center'
@@ -747,7 +827,7 @@ const App = () => {
               <h3 style={{
                 fontSize: '1.5rem',
                 fontWeight: '700',
-                color: '#1a1a1a',
+                color: '#ffffff',
                 marginBottom: '1.5rem',
                 borderBottom: '2px solid #ff9800',
                 paddingBottom: '0.5rem'
@@ -756,7 +836,7 @@ const App = () => {
               </h3>
               <p style={{
                 fontSize: '1.1rem',
-                color: '#555',
+                color: '#e0e0e0',
                 lineHeight: '1.8'
               }}>
                 Profesionalizar la presencia digital del negocio, mejorar su imagen de marca y aumentar la captación de clientes a través de una estrategia clara, constante y orientada a resultados.
@@ -766,7 +846,7 @@ const App = () => {
           <FadeInSection delay={0.3}>
             <p style={{
               fontSize: '1.1rem',
-              color: '#555',
+              color: '#e0e0e0',
               lineHeight: '1.8',
               textAlign: 'center',
               fontStyle: 'italic',
@@ -782,7 +862,7 @@ const App = () => {
       {/* Services Section */}
       <section id="servicios" style={{
         padding: '6rem 4rem',
-        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%)',
+        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 100%)',
         position: 'relative',
         zIndex: 1,
         backdropFilter: 'blur(2px)'
@@ -791,7 +871,7 @@ const App = () => {
           <h2 style={{
             fontSize: 'clamp(2rem, 4vw, 2.8rem)',
             fontWeight: '700',
-            color: '#1a1a1a',
+            color: '#ffffff',
             marginBottom: '4rem',
             textAlign: 'center'
           }}>
@@ -894,7 +974,7 @@ const App = () => {
                 <h3 style={{
                   fontSize: '1.8rem',
                   fontWeight: '700',
-                  color: '#1a1a1a',
+                  color: '#ffffff',
                   marginBottom: '1rem',
                   lineHeight: '1.3'
                 }}>
@@ -902,7 +982,7 @@ const App = () => {
                 </h3>
                 <p style={{
                   fontSize: '1rem',
-                  color: '#666',
+                  color: '#d0d0d0',
                   lineHeight: '1.7',
                   marginBottom: '1.5rem'
                 }}>
@@ -911,7 +991,7 @@ const App = () => {
                 <a 
                   href="#contacto" 
                   style={{
-                    color: '#ff9800',
+                    color: scrollProgress < 0.5 ? '#60A5FA' : '#A78BFA',
                     textDecoration: 'none',
                     fontWeight: '600',
                     fontSize: '1rem',
@@ -938,7 +1018,7 @@ const App = () => {
             <a 
               href="#servicios" 
               style={{
-                color: '#ff9800',
+                color: scrollProgress < 0.5 ? '#60A5FA' : '#A78BFA',
                 textDecoration: 'none',
                 fontWeight: '600',
                 fontSize: '1.1rem',
@@ -963,7 +1043,7 @@ const App = () => {
       {/* Clients Section */}
       <section id="trabajos" style={{
         padding: '6rem 4rem',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
         textAlign: 'center',
         position: 'relative',
         zIndex: 1,
@@ -973,7 +1053,7 @@ const App = () => {
           <h2 style={{
             fontSize: 'clamp(2rem, 4vw, 2.8rem)',
             fontWeight: '700',
-            color: '#1a1a1a',
+            color: '#ffffff',
             marginBottom: '4rem'
           }}>
             Algunas empresas <span style={{ color: '#ff9800' }}>en las que trabajamos</span>
@@ -998,7 +1078,7 @@ const App = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#999',
+                  color: '#b0b0b0',
                   fontSize: '0.9rem',
                   fontWeight: '500',
                   transition: 'all 0.3s ease',
@@ -1036,7 +1116,7 @@ const App = () => {
           <h2 style={{
             fontSize: 'clamp(2rem, 4vw, 2.8rem)',
             fontWeight: '700',
-            color: '#1a1a1a',
+            color: '#ffffff',
             marginBottom: '4rem'
           }}>
             <span style={{ color: '#ff9800' }}>Nos encanta</span> recibir Feedback de nuestros clientes!
@@ -1074,7 +1154,7 @@ const App = () => {
               >
                 <p style={{
                   fontSize: '1.1rem',
-                  color: '#555',
+                  color: '#e0e0e0',
                   lineHeight: '1.8',
                   fontStyle: 'italic',
                   marginBottom: '1.5rem'
@@ -1083,7 +1163,7 @@ const App = () => {
                 </p>
                 <p style={{
                   fontSize: '0.95rem',
-                  color: '#ff9800',
+                  color: scrollProgress < 0.5 ? '#60A5FA' : '#A78BFA',
                   fontWeight: '600'
                 }}>
                   - Cliente Satisfecho
@@ -1323,9 +1403,9 @@ const App = () => {
             marginTop: '0.5rem',
             fontSize: '0.75rem',
             fontWeight: '600',
-            color: '#1a1a1a',
+            color: '#ffffff',
             textAlign: 'center',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
             padding: '0.25rem 0.5rem',
             borderRadius: '4px',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
@@ -1335,6 +1415,115 @@ const App = () => {
           Donacion de febros.uy
         </span>
       </a>
+
+      {/* Logo de Facebook en lateral izquierdo - aparece en mitad de página */}
+      <div
+        style={{
+          position: 'fixed',
+          left: '2rem',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 999,
+          opacity: getFacebookOpacity(),
+          transition: 'opacity 0.5s ease, transform 0.5s ease',
+          pointerEvents: getFacebookOpacity() > 0.5 ? 'auto' : 'none'
+        }}
+      >
+        <a
+          href="https://www.facebook.com/cardozodigitalstudio"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '60px',
+            height: '60px',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            borderRadius: '50%',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            textDecoration: 'none',
+            transition: 'all 0.3s ease',
+            backdropFilter: 'blur(10px)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.15)';
+            e.currentTarget.style.boxShadow = '0 6px 30px rgba(59, 130, 246, 0.5)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+          }}
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="#1877F2"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </a>
+      </div>
+
+      {/* Logo de Instagram en lateral derecho - aparece al final */}
+      <div
+        style={{
+          position: 'fixed',
+          right: '2rem',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 999,
+          opacity: getInstagramOpacity(),
+          transition: 'opacity 0.5s ease, transform 0.5s ease',
+          pointerEvents: getInstagramOpacity() > 0.5 ? 'auto' : 'none'
+        }}
+      >
+        <a
+          href="https://www.instagram.com/cardozodigitalstudio"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '60px',
+            height: '60px',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            borderRadius: '50%',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            textDecoration: 'none',
+            transition: 'all 0.3s ease',
+            backdropFilter: 'blur(10px)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.15)';
+            e.currentTarget.style.boxShadow = '0 6px 30px rgba(138, 43, 226, 0.5)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+          }}
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="url(#instagram-gradient)"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="instagram-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#833AB4" />
+                <stop offset="50%" stopColor="#FD1D1D" />
+                <stop offset="100%" stopColor="#FCB045" />
+              </linearGradient>
+            </defs>
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+      </div>
 
       <style>{`
         @keyframes float {
